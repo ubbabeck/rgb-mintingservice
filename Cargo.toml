@@ -1,0 +1,22 @@
+[package]
+name = "nft-minstservice"
+version = "0.1.0"
+edition = "2021"
+authors = ["Ruben Beck ruben.beck@pm.me"]
+readme = "README.md"
+categories = ["command-line-utilities"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.79"
+bitcoincore-rpc = "0.18.0"
+bitcoind = "0.34.1"
+clap = "4.5.0"
+electrsd = { version= "0.27.1", features = ["bitcoind_23_1", "electrs_0_9_1"] }
+hex = "0.4.3"
+rgb-lib = { git ="https://github.com/RGB-Tools/rgb-lib.git", rev = "b68c6d4c415a5cfcd179f61e8eebfab35f426e78" } 
+rustyline = { version ="13.0.0", features = ["derive"] }
+serde_json = "1.0.113"
+
+
