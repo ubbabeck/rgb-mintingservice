@@ -1,0 +1,33 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events but only for the "main" branch
+  push:
+    branches: [ main ]
+  pull_request:    
+jobs:
+
+  fmt:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3      
+      - name: Run Format
+        run: |
+        
+          cargo fmt -- --check
+  test:     
+    name: Test nft-mintservice
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install rust
+        run: |
+         rustup set auto-self-update disable
+         rustup toolchain install stable --profile minimal
+    
+      - name: Run tests
+        run: cargo test
