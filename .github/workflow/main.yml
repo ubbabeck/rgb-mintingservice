@@ -15,11 +15,9 @@ on:
       - uses: actions/checkout@v3      
       - name: Run Format
         run: |
-          cd libs
+        
           cargo fmt -- --check
-          cd ../tools/sdk-cli
-          cargo fmt -- --check
-            build-core:
+          
     name: Test nft-mintservice
     runs-on: ubuntu-latest
     steps:
