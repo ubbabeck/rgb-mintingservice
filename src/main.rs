@@ -8,15 +8,15 @@ use bitcoincore_rpc::bitcoin::Network;
 use clap::Parser;
 use core::result::Result::Ok;
 
-use anyhow::{anyhow, ensure, Error, Result};
-use bitcoind::{BitcoinD, Conf};
+use anyhow::Result;
+
 use electrsd::ElectrsD;
 use rgb_lib::{
     keys::Keys,
     wallet::{self, AssetUDA, Online, ReceiveData, Recipient, WalletData},
     Wallet,
 };
-use rustyline::{error::ReadlineError, Editor};
+use rustyline::error::ReadlineError;
 
 use crate::{command_handlers::handle_command, commands::Commands, service::Service};
 
@@ -30,7 +30,7 @@ fn main() -> Result<()> {
 
     let service = &mut Service::new(Network::Regtest)?;
 
-    let mut rl = &mut rustyline::DefaultEditor::new()?;
+    let rl = &mut rustyline::DefaultEditor::new()?;
     print!(
         "
         help to list commands.
@@ -49,7 +49,7 @@ fn main() -> Result<()> {
                     println!("{}", cli_res.unwrap_err());
                     continue;
                 }
-                let res = handle_command(rl, cli_res.unwrap(), service);
+                let res = handle_command(cli_res.unwrap(), service);
                 show_results(res);
                 continue;
             }
@@ -62,7 +62,7 @@ fn main() -> Result<()> {
                 break;
             }
             Err(err) => {
-                println!("Closing");
+                println!("Err {}", err);
                 break;
             }
         }

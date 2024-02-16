@@ -1,29 +1,18 @@
-use core::fmt;
-use std::{
-    cell::OnceCell,
-    collections::HashMap,
-    str::FromStr,
-    sync::{Mutex, OnceLock},
-};
+use std::{collections::HashMap, str::FromStr};
 
-use anyhow::{anyhow, Error, Ok};
+use anyhow::{Error, Ok};
 use bitcoincore_rpc::{
     bitcoin::{self, Txid},
     RpcApi,
 };
 use rgb_lib::{
-    wallet::{self, Recipient, RecipientData},
+    wallet::{Recipient, RecipientData},
     SecretSeal,
 };
-use rustyline::{history::FileHistory, Editor};
 
 use crate::{service::Service, Commands};
 
-pub(crate) fn handle_command(
-    rl: &mut Editor<(), FileHistory>,
-    command: Commands,
-    service: &mut Service,
-) -> Result<String, Error> {
+pub(crate) fn handle_command(command: Commands, service: &mut Service) -> Result<String, Error> {
     match command {
         Commands::Mine { blocks } => {
             let res = service.mine(blocks)?;
@@ -174,11 +163,11 @@ pub(crate) fn handle_command(
             }
             Ok("User not found".to_string())
         }
-        Commands::ListTransfers { user } => {
+        Commands::ListTransfers { user, asset_id } => {
             if let Some(user) = service.users.iter().find(|u| u.name == user) {
                 user.wallet.refresh(user.online.clone(), None, vec![])?;
-                let res = user.wallet.list_transfers(None)?;
-                return serde_json::to_string_pretty(&res).map_err(|e| e.into()); 
+                let res = user.wallet.list_transfers(Some(asset_id))?;
+                return serde_json::to_string_pretty(&res).map_err(|e| e.into());
             }
             Ok("User not found".to_string())
         }

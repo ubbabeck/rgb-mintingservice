@@ -28,8 +28,6 @@ impl Service {
 
         let bitcoind = bitcoind::BitcoinD::from_downloaded_with_conf(&conf).unwrap();
 
-        let mut electrsd_conf = electrsd::Conf::default();
-
         let electrs_path = electrsd::downloaded_exe_path().unwrap();
         let electrsd = electrsd::ElectrsD::new(electrs_path, &bitcoind).unwrap();
         let users = Vec::new();
@@ -94,10 +92,10 @@ impl Service {
 #[test]
 fn test_create_user() -> Result<()> {
     // First initialize a service
-    let mut service = Service::new(Network::Regtest)?;
+    let service = Service::new(Network::Regtest)?;
 
     let user = User::new("testuser", &service.electrsd)?;
-    let addr = user.get_address()?;
+    let _ = user.get_address()?;
     service.mine(120)?;
     service.sync_to_chain(None)?;
 
@@ -193,5 +191,11 @@ fn test_send() -> Result<()> {
 
     recv.wallet.refresh(recv.online.clone(), None, vec![])?;
     println!("{:?}", nft);
+
+    let txs = recv.wallet.list_transactions(Some(recv.online.clone()))?;
+    println!("tx{:?}", txs);
+    service.mine(2)?;
+    let transfers = recv.wallet.list_transfers(Some(nft.asset_id))?;
+    assert!(!transfers.is_empty());
     Ok(())
 }

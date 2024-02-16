@@ -50,7 +50,8 @@ pub(crate) enum Commands {
     ListNfts {
         user: String,
     },
-    ListTransfers{
-        user:String,
-    }
+    ListTransfers {
+        user: String,
+        asset_id: String,
+    },
 }
