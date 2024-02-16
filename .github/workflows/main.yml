@@ -6,7 +6,7 @@ on:
   push:
     branches: [ main ]
   pull_request:    
-  jobs:
+jobs:
 
   fmt:
     name: Format
@@ -17,7 +17,7 @@ on:
         run: |
         
           cargo fmt -- --check
-          
+  test:     
     name: Test nft-mintservice
     runs-on: ubuntu-latest
     steps:
@@ -26,8 +26,8 @@ on:
 
       - name: Install rust
         run: |
-          rustup set auto-self-update disable
-          rustup toolchain install stable --profile minimal
-          
-      - name: Run sdk-core tests
+         rustup set auto-self-update disable
+         rustup toolchain install stable --profile minimal
+    
+      - name: Run tests
         run: cargo test
